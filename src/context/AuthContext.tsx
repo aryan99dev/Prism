@@ -1,5 +1,5 @@
-import { createContext, useContext ,useEffect, useState  } from 'react'
-import type {IContextType, IUser} from "@/types";
+import { createContext, useContext, useEffect, useState  } from 'react'
+import type { IUser} from "@/types";
 import {getCurrentUser} from "@/lib/appwrite/api.ts";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ export const INITIAL_USER = {
     name: '',
     username: '',
     email: '',
-    ImageUrl: '',
+    imageUrl: '', // Changed from ImageUrl to imageUrl
     bio: '',
 };
 
@@ -21,6 +21,15 @@ const INITIAL_STATE = {
     checkAuthUser: async () => false as boolean,
 }
 
+type IContextType = {
+    user: IUser;
+    isLoading: boolean;
+    setUser: React.Dispatch<React.SetStateAction<IUser>>;
+    isAuthenticated: boolean;
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    checkAuthUser: () => Promise<boolean>;
+}
+
 const AuthContext = createContext<IContextType>(INITIAL_STATE)
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -30,9 +39,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const navigate = useNavigate()
 
-    const cheackAuthUser =  async  () => {
+    const checkAuthUser = async () => { // Corrected function name from cheackAuthUser to checkAuthUser
         try {
-            const currentAccount = await  getCurrentUser();
+            const currentAccount = await getCurrentUser();
 
             if (currentAccount) {
                 setUser({
@@ -45,7 +54,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 })
                 setIsAuthenticated(true);
                 return true;
-
             }
 
             return false;
@@ -58,13 +66,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
-            // localStorage.getItem('cookieFallback') === null
         if (
-            localStorage.getItem('cookieFallback') === '[]'
-        )
-            navigate('/sign-in')
+            localStorage.getItem('cookieFallback') === '[]' ||
+            localStorage.getItem('cookieFallback') === null
+        )navigate('/sign-in')
 
-        cheackAuthUser()
+        checkAuthUser(); // Changed to use the correctly named function
     }, []);
 
     const value = {
@@ -73,16 +80,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading,
         isAuthenticated,
         setIsAuthenticated,
-        // Add other values as needed
+        checkAuthUser, // Added checkAuthUser to the value object
     };
 
-    
     return (
         <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )
 }
+
 export default AuthProvider;
 
-export const  useUserContext = () => useContext(AuthContext);
+export const useUserContext = () => useContext(AuthContext);

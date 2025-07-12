@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button.tsx";
 import {useForm} from "react-hook-form";
 import { z } from "zod";
-import {SignupValidation} from "@/lib/validation";
+import {SigninValidation} from "@/lib/validation";
 import Loader from "@/components/Shared/Loader.tsx";
 import {Link , useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast"
@@ -13,20 +13,15 @@ import {useCreateUserAccount, useSignInAccount} from "@/lib/react-query/queriesA
 import {useUserContext} from "@/context/AuthContext.tsx";
 
 
-
+//
 const SignupForm = () => {
     const { toast } = useToast();
-    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
     const navigate = useNavigate();
+    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
 
-    const { mutateAsync: createUserAccount, isPending: isCreatingUser } = useCreateUserAccount();
-
-    const { mutateAsync: signInAccount, isPending: isSigningIn }  = useSignInAccount();
-
-
-        // 1. Define your form.
-        const form = useForm<z.infer<typeof SignupValidation>>({
-        resolver: zodResolver(SignupValidation),
+//
+        const form = useForm<z.infer<typeof SigninValidation>>({
+        resolver: zodResolver(SigninValidation),
         defaultValues: {
             name: '',
             username: "",
@@ -34,10 +29,15 @@ const SignupForm = () => {
             password: "",
         },
     })
+//Queries
+    const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+    const { mutateAsync: signInAccount, isPending: isSigningIn }  = useSignInAccount();
+//
 
-    // 2. Define a submit handler.
-   async function onSubmit(values: z.infer<typeof SignupValidation>) {
-//create the user
+
+
+   async function onSubmit(values: z.infer<typeof SigninValidation>) {
+
        const newUser = await createUserAccount(values);
 
        if(!newUser){
@@ -55,10 +55,15 @@ const SignupForm = () => {
                title: "Sign In failed. please, try again",
            })
        }
+       // Before the checkAuthUser call
+       console.log("About to check authentication status");
+
        const isLoggedIn = await checkAuthUser();
 
+
+
        if (isLoggedIn) {
-           form.reset();
+           // form.reset();
 
            navigate('/')
        } else {
@@ -71,19 +76,19 @@ const SignupForm = () => {
     return (
 
 // grid
-<div className="grid grid-cols-5 grid-rows-5 gap-4 bg-white/5 rounded-3xl
+<div className="grid grid-cols-5 grid-rows-5 gap-4 bg-primary-500/5 rounded-3xl
          w-[450px] md:w-[600px] lg:w-[600px]
                 h-[60vh] md:h-[60vh] lg:h-[60vh]
 
-ring-[0.7px] ring-violet-300/50 fade-in-shadow backdrop-blur-[5px]
+ring-[0.5px] drop-shadow-lg ring-violet-300/50 fade-in-shadow backdrop-blur-[5px]
 ">
     <div className="col-span-5 row-span-5 flex items-center justify-center">
         <div className="w-full max-w-lg mx-auto px-6">
             <Form {...form}>
                 <div className="flex flex-col items-center justify-center w-full mb-4">
-                    <img 
-                        src="/assets/logoTransParent.png" 
-                        alt="logo" 
+                    <img
+                        src="/assets/logoTransParent.png"
+                        alt="logo"
                         className="size-10"
                     />
                     <h1 className="text-xl font-medium text-white">Welcome to
@@ -179,7 +184,7 @@ ring-[0.7px] ring-violet-300/50 fade-in-shadow backdrop-blur-[5px]
                             className="shad-button_primary"
 
                             type="submit">
-                            {isCreatingUser ? (
+                            {isCreatingAccount ? (
                                 <div className="flex-center gap-2">
                                    <Loader  />  Loading
                                 </div>

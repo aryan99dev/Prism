@@ -29,7 +29,7 @@ export async function createUserAccount(user: INewUser) {
     }
 }
 
-export async function saveUserToDB(user: {  accountID: string;
+export async function saveUserToDB(user: {  accountId: string;
                                             email: string;
                                             name: string;
                                             imageUrl: URL;
