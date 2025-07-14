@@ -31,5 +31,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "src/components/Shared/TextAnimations/RotatingText", ".src/components/TextAnimations/VariableProximity"]
 }

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button.tsx";
 import {useForm} from "react-hook-form";
 import { z } from "zod";
-import {SigninValidation} from "@/lib/validation";
+import {SigninValidation, SignupValidation} from "@/lib/validation";
 import Loader from "@/components/Shared/Loader.tsx";
 import {Link , useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast"
@@ -20,8 +20,8 @@ const SignupForm = () => {
     const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
 
 //
-        const form = useForm<z.infer<typeof SigninValidation>>({
-        resolver: zodResolver(SigninValidation),
+        const form = useForm<z.infer<typeof SignupValidation>>({
+        resolver: zodResolver(SignupValidation),
         defaultValues: {
             name: '',
             username: "",
@@ -36,7 +36,7 @@ const SignupForm = () => {
 
 
 
-   async function onSubmit(values: z.infer<typeof SigninValidation>) {
+   async function onSubmit(values: z.infer<typeof SignupValidation>) {
 
        const newUser = await createUserAccount(values);
 
