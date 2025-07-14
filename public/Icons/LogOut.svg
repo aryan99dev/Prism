@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+    <defs>
+        <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#9370DB" />
+            <stop offset="100%" stop-color="#663399" />
+        </linearGradient>
+    </defs>
+    <style>
+        svg:hover .logout {
+            animation: logout-right 1s cubic-bezier(1, -0.17, 0.29, 0.99) infinite alternate both;
+        }
+        .logout {
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            fill: url(#purpleGradient);
+        }
+        @keyframes logout-right {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(2px);
+            }
+        }
+    </style>
+    <path stroke="#0A0A30" stroke-linecap="round" stroke-width="1.5" d="M14.5 14.508V17a2.5 2.5 0 01-2.5 2.5H7A2.5 2.5 0 014.5 17V7A2.5 2.5 0 017 4.5h5A2.5 2.5 0 0114.5 7v2.563"/>
+    <path class="logout" d="M10.333 12.75a.75.75 0 010-1.5v1.5zm8.66-1.5a.75.75 0 010 1.5v-1.5zm-2.551-1.216a.75.75 0 111.054-1.068l-1.054 1.068zM19.5 12l.527-.534a.75.75 0 010 1.068L19.5 12zm-2.004 3.034a.75.75 0 11-1.054-1.068l1.054 1.068zm-7.163-3.784h8.66v1.5h-8.66v-1.5zm7.163-2.284l2.531 2.5-1.054 1.068-2.531-2.5 1.054-1.068zm2.531 3.568l-2.531 2.5-1.054-1.068 2.531-2.5 1.054 1.068z"/>
+</svg>
