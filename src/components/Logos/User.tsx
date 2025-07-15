@@ -32,7 +32,7 @@ interface UserProps extends React.SVGAttributes<SVGSVGElement> {
     stroke?: string;
 }
 
-const User = ({
+const UserLG = ({
                   width = 28,
                   height = 28,
                   strokeWidth = 2,
@@ -87,4 +87,4 @@ const User = ({
     );
 };
 
-export { User };
+export { UserLG };

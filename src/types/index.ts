@@ -1,9 +1,11 @@
-export type INavLink = {
-    imgURL: string;
-    route: string;
-    label: string;
-};
+import type { FC } from "react";
 
+export interface INavLink {
+  imgURL?: string;
+  icon?: FC;
+  route: string;
+  label: string;
+}
 export type IUpdateUser = {
     userId: string;
     name: string;

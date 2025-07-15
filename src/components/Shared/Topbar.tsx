@@ -19,8 +19,8 @@ const Topbar = () => {
     const { user } = useUserContext();
 
     return (
-        <section className="topbar ">
-            <div className="flex-between py-4 px-5">
+        <section className="topbar top-0 ">
+            <div className="flex-between py-0 px-5">
                 <Link to="/" className=" flex gap-3 items-center">
                     <img
                         src="/assets/logoTransParent.png"

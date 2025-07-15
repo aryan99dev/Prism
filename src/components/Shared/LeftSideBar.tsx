@@ -1,4 +1,4 @@
-import {Link, NavLink, useNavigate} from "react-router-dom";
+import {Link, NavLink, useNavigate, useLocation} from "react-router-dom";
 import TextPressure from "./TextPressure/TextPressure";
 import { useSignOutAccount } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
@@ -7,10 +7,14 @@ import { Button } from "../ui/button";
 import { sidebarLinks } from "@/constants";
 import type { INavLink } from "@/types";
 import ClickSpark from "./Animations/ClickSpark/ClickSpark";
-import InfiniteScroll from "./Components/InfiniteScroll/InfiniteScroll";
+
 
 const LeftSideBar = () => {
-    const { mutate: SignOut, isSuccess } = useSignOutAccount();
+    const { pathname } = useLocation();
+
+
+    const { mutate: SignOut,
+         isSuccess } = useSignOutAccount();
         const navigate = useNavigate();
     
         useEffect(() => {
@@ -85,26 +89,39 @@ const LeftSideBar = () => {
 
              {/* pages links */}
              
-             <ul>
+             <ul className="flex flex-col gap-6">
                 {sidebarLinks.map((link: INavLink) => {
+                    const isActive = pathname === link.route
+                    const IconComponent = link.icon;
                     return(
-                        <li key={link.label} className="leftsidebar-link">
+                        <li key={link.label} className=
+                        {`leftsidebar-link ${
+                            isActive && 'bg-primary-600'
+                            }`
+                        }
+                        >
                         <NavLink
                         to={link.route}
-                        
+                        className="flex gap-4 items-center p-2 "
                         >
-                            {link.label}
+                            <div className="flex scale-75">
+                         {IconComponent && <IconComponent 
+                            className={`group-hover:invert-violet
+                                ${isActive && 'invert-white'}`} 
+                         />}
+                            </div>
+                         {link.label}
                         </NavLink>
                         </li>
                     )
                 })}
              </ul>
              {/* LogOut */}
-             <div className="flex gap-4 items-center justify-center">
-                 <Button variant="ghost" className="shad-button_ghost " onClick={() => SignOut()}>
+             <div className="flex flex-col gap-4 items-center justify-center m-auto py-60">
+                 <Button variant="ghost" className="shad-button_ghost w-full " onClick={() => SignOut()}>
                     <img src="/Icons/logout.svg" 
                     />
-                    Logout
+                    <p className="small-medium lg:base-medium  ">Logout</p>
                     </Button>
              </div>
          </div>

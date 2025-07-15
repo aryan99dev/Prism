@@ -25,11 +25,11 @@
     }
 
     .h2-bold {
-        @apply text-[30px] font-bold leading-[140%] tracking-tighter;
+        @apply text-[24px] md:text-[30px] font-bold leading-[140%] tracking-tighter;
     }
 
     .h3-bold {
-        @apply text-[24px] font-bold leading-[140%] tracking-tighter;
+        @apply text-[20px] md:text-[24px] font-bold leading-[140%] tracking-tighter;
     }
 
     .base-semibold {
@@ -186,11 +186,16 @@
         @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
     }
 
-    /* Bottom bar */
-    .bottom-bar {
-        @apply z-50 flex-between w-full sticky bottom-0 rounded-t-[20px] bg-dark-2 px-5 py-4 md:hidden;
-    }
+/* Bottom bar */
+.bottom-bar {
+    @apply fixed bottom-0 left-0 right-0 z-50 flex-between w-full 
+     bg-dark-2 px-5 py-4 md:hidden text-center
+    border-t border-dark-4 backdrop-blur-lg bg-dark-2/50;
+}
 
+.bottombar-link {
+    @apply rounded-xl py-3 px-4 base-medium hover:bg-gradient-to-r to-indigo-600/50 from-violet-500/50 transition;
+}
     /* File uploader */
     .file_uploader-img {
         @apply h-80 lg:h-[480px] w-full rounded-[24px] object-cover object-top;
@@ -217,13 +222,18 @@
         @apply absolute bottom-0 p-5 flex-between w-full bg-gradient-to-t from-dark-3 to-transparent rounded-b-[24px] gap-2;
     }
 
-    /* Left sidebar */
-    .leftsidebar {
-        @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2;
-    }
+/* Left sidebar */
+.leftsidebar {
+    @apply fixed left-0 top-0 hidden md:flex px-6 py-10 flex-col justify-between 
+    items-center min-w-[270px] bg-dark-2 h-screen z-50;
+}
+
+.main-wrapper {
+    @apply flex flex-1 md:ml-[270px] w-full max-w-[1440px] mx-auto transition-all;
+}
 
     .leftsidebar-link {
-        @apply rounded-lg base-medium hover:bg-gradient-to-r to-indigo-600 from-violet-400 transition;
+        @apply rounded-2xl base-medium hover:bg-gradient-to-r to-indigo-600/50 from-violet-500/50 transition;
     }
 
     /* Post Card */
@@ -237,7 +247,7 @@
 
     /* Topbar */
     .topbar {
-        @apply sticky top-0 z-50 md:hidden bg-dark-2 w-full;
+        @apply sticky  top-0 z-50 md:hidden bg-dark-2/50 backdrop-blur w-full  ;
     }
 
     /* User card */

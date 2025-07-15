@@ -1,0 +1,42 @@
+<style>
+    .user-icon {
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        padding: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-icon svg .circle,
+    .user-icon svg .path {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        transition: stroke-dashoffset 0.4s ease, transform 0.4s ease, opacity 0.4s ease;
+        opacity: 0;
+    }
+
+    .user-icon:hover svg .circle {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .user-icon:hover svg .path {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+
+    .circle {
+        transform: scale(0.5);
+        transform-origin: center;
+    }
+</style>
+
+<div class="user-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle class="circle" cx="12" cy="8" r="5" />
+        <path class="path" d="M20 21a8 8 0 0 0-16 0" />
+    </svg>
+</div>

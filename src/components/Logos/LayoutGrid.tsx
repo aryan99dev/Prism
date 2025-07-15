@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
-import type { Variants } from "framer-motion";
-
+import { motion, useAnimation } from "motion/react";
+import type { Variants } from "motion/react";
 
 const boxVariants: Variants = {
   normal: (i: number) => ({
