@@ -7,6 +7,7 @@ import type { INewUser, IUpdatePost, INewPost, IUpdateUser } from '@/types';
 
 
 
+// Registers a new user in Appwrite and saves their info in the database.
 export async function createUserAccount(user: INewUser) {
     try {
         const newAccount = await account.create(
@@ -33,6 +34,7 @@ export async function createUserAccount(user: INewUser) {
     }
 }
 
+// Adds a user's details to the database (after account creation).
 export async function saveUserToDB(user: {  accountID: string;
                                             email: string;
                                             name: string;
@@ -51,6 +53,7 @@ export async function saveUserToDB(user: {  accountID: string;
 
     }
 }
+// Logs in a user using their email and password.
 export async function SignInAccount(user: { email: string; password: string }) {
     try {
         const session = await account.createEmailPasswordSession(user.email, user.password);
@@ -62,6 +65,7 @@ export async function SignInAccount(user: { email: string; password: string }) {
 }
 
 
+// Gets the currently logged-in user's details from the database.
 export async function getCurrentUser() {
     try {
         const currentAccount = await account.get();
@@ -83,6 +87,7 @@ export async function getCurrentUser() {
 }
 
 
+// Logs out the current user from the app.
 export async function SignOutAccount() {
   try {
     const session = await account.deleteSession("current");
@@ -94,6 +99,7 @@ export async function SignOutAccount() {
 }
 
 
+// Creates a new post with an image and saves it to the database.
 export async function createPost(post: INewPost) {
   try {
       // Upload file to appwrite storage
@@ -140,7 +146,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== UPLOAD FILE
+  // Uploads a file (like an image) to Appwrite storage.
   export async function uploadFile(file: File) {
     try {
       const uploadedFile = await storage.createFile(
@@ -156,7 +162,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET FILE URL
+  // Gets a URL to preview a file stored in Appwrite.
   export function getFilePreview(fileId: string) {
     try {
       const fileUrl = storage.getFilePreview(
@@ -177,7 +183,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== DELETE FILE
+  // Removes a file from Appwrite storage.
   export async function deleteFile(fileId: string) {
     try {
       await storage.deleteFile(appwriteConfig.storageID, fileId);
@@ -189,7 +195,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET POSTS
+  // Finds posts that match a search term in their caption.
   export async function searchPosts(searchTerm: string) {
     try {
       const posts = await databases.listDocuments(
@@ -207,6 +213,8 @@ export async function createPost(post: INewPost) {
     }
   }
   
+
+  // Loads posts in pages for infinite scrolling (loads more as you scroll).
   export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
     const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
   
@@ -230,7 +238,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET POST BY ID
+  // Gets a single post's details using its ID.
   export async function getPostById(postId?: string) {
     if (!postId) throw Error;
   
@@ -250,7 +258,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== UPDATE POST
+//  Updates a post's info and image (if a new one is provided).
   export async function updatePost(post: IUpdatePost) {
     const hasFileToUpdate = post.file.length > 0;
   
@@ -315,7 +323,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== DELETE POST
+  // Deletes a post and its image from the database and storage.
   export async function deletePost(postId?: string, imageId?: string) {
     if (!postId || !imageId) return;
   
@@ -337,7 +345,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== LIKE / UNLIKE POST
+  // Updates the list of users who liked a post.
   export async function likePost(postId: string, likesArray: string[]) {
     try {
       const updatedPost = await databases.updateDocument(
@@ -357,8 +365,7 @@ export async function createPost(post: INewPost) {
       throw error;
     }
   }
-  
-  // ============================== SAVE POST
+  // Saves a post for a user (like bookmarking).
   export async function savePost(userId: string, postId: string) {
     try {
       const updatedPost = await databases.createDocument(
@@ -379,7 +386,7 @@ export async function createPost(post: INewPost) {
       throw error;
     }
   }
-  // ============================== DELETE SAVED POST
+  // Removes a saved post from a user's saved list.
   export async function deleteSavedPost(savedRecordId: string) {
     try {
       const statusCode = await databases.deleteDocument(
@@ -397,7 +404,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET USER'S POST
+  // Gets all posts made by a specific user.
   export async function getUserPosts(userId?: string) {
     if (!userId) return;
   
@@ -417,7 +424,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET POPULAR POSTS (BY HIGHEST LIKE COUNT)
+  // Gets the most recent posts (up to 20).
   export async function getRecentPosts() {
     try {
       const posts = await databases.listDocuments(
@@ -439,7 +446,7 @@ export async function createPost(post: INewPost) {
   // USER
   // ============================================================
   
-  // ============================== GET USERS
+  // Gets a list of users, with an optional limit on how many to fetch.
   export async function getUsers(limit?: number) {
     const queries: any[] = [Query.orderDesc("$createdAt")];
   
@@ -463,7 +470,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== GET USER BY ID
+  // Gets a user's details using their user ID.
   export async function getUserById(userId: string) {
     try {
       const user = await databases.getDocument(
@@ -481,7 +488,7 @@ export async function createPost(post: INewPost) {
     }
   }
   
-  // ============================== UPDATE USER
+  // Updates a user's profile info and image (if a new one is provided).
   export async function updateUser(user: IUpdateUser) {
     const hasFileToUpdate = user.file.length > 0;
     try {

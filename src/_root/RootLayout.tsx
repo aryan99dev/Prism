@@ -10,7 +10,9 @@ const RootLayout = () => {
         <div className="w-full md:flex ">
             <Topbar />
             <LeftSideBar />
+            
             <div className="main-wrapper">
+                
             <section className="flex flex-1 h-full">
                 <Outlet />
             </section>

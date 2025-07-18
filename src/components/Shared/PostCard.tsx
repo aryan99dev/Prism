@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { formatDistanceToNow } from "date-fns";
 import { Bolt } from "./Bolt";
 import { useUserContext } from "@/context/AuthContext";
-import { Loader } from "lucide-react";
+import PostStats from "./PostStats";
 
 type PostCardProps = {
     post: Models.Document
@@ -17,7 +17,7 @@ console.log(post);
 if(!post.creator) return;
 
   return (
-    <div className="post-card">
+    <div className="post-card hover:scale-[101%] duration-700 ease-in-out backdrop-blur-[1.7px]">
         <div className="flex w-full items-center">
             <div className="flex items-center gap-3">
                 <Link 
@@ -47,7 +47,8 @@ if(!post.creator) return;
                 className={`${user.id !== post.creator.$id && "hidden"} ml-auto ` }
             >
                 <Bolt 
-                    className="w-5 h-5"
+                    className="w-5 h-5 drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]"
+                    stroke="#FFD700"
                 />
             </Link>
         </div>
@@ -79,6 +80,8 @@ if(!post.creator) return;
             alt="Post image"
             />
         </Link>
+
+        <PostStats post={post} userId={user.id} />
     </div>
   )
 }

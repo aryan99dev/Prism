@@ -1,3 +1,4 @@
+import DotBackground from "@/components/Shared/DotBackground";
 import Loader from "@/components/Shared/Loader";
 import PostCard from "@/components/Shared/PostCard";
 import ScrambledText from "@/components/Shared/TextAnimations/ScrambledText/ScrambledText"
@@ -9,8 +10,10 @@ const Home = () => {
 
 
     return (
-        <div className="flex flex-1 ">
-            <div className="home-container">
+        <div className="flex flex-1" style={{ position: "relative" }}>
+            <DotBackground />
+            <div className="home-container" style={{ position: "relative", zIndex: 1 }}>
+                
                 <div className="home-posts">
                  <ScrambledText
                    className="h3-bold md:h2-bold text-left w-full  

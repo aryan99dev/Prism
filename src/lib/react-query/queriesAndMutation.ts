@@ -5,40 +5,24 @@ import {
   useQueryClient,
   useInfiniteQuery,
 } from "@tanstack/react-query";
-
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
-import {
-  createUserAccount,
-  SignInAccount,
-  SignOutAccount,
-  getCurrentUser,
-  getUsers,
-  createPost,
-  getPostById,
-  updatePost,
-  getUserPosts,
-  deletePost,
-  likePost,
-  getUserById,
-  updateUser,
-  getRecentPosts,
-  getInfinitePosts,
-  searchPosts,
-  savePost,
-  deleteSavedPost,
-} from "@/lib/appwrite/api.ts";
+import {  createUserAccount,  SignInAccount,  SignOutAccount,  getCurrentUser,  getUsers,  createPost,  getPostById,  updatePost,
+          getUserPosts,  deletePost,  likePost,  getUserById,  updateUser,  getRecentPosts,  getInfinitePosts,  searchPosts,  
+          savePost,  deleteSavedPost, } from "@/lib/appwrite/api.ts";
 import type { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 
 // ============================================================
 // AUTH QUERIES
 // ============================================================
 
+// Lets you create a new user account (sign up) using a mutation.
 export const useCreateUserAccount = () => {
   return useMutation({
     mutationFn: (user: INewUser) => createUserAccount(user),
   });
 };
 
+// Lets you log in a user with email and password using a mutation.
 export const useSignInAccount = () => {
   return useMutation({
     mutationFn: (user: { email: string; password: string }) =>
@@ -46,6 +30,7 @@ export const useSignInAccount = () => {
   });
 };
 
+// Lets you log out the current user using a mutation.
 export const useSignOutAccount = () => {
   return useMutation({
     mutationFn: SignOutAccount,
@@ -56,10 +41,12 @@ export const useSignOutAccount = () => {
 // POST QUERIES
 // ============================================================
 
+// Loads posts in pages for infinite scrolling (fetches more as you scroll).
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     queryFn: getInfinitePosts as any,
+    initialPageParam: 0, // <-- Add this line
     getNextPageParam: (lastPage: any) => {
       if (lastPage && lastPage.documents.length === 0) {
         return null;
@@ -70,6 +57,7 @@ export const useGetPosts = () => {
   });
 };
 
+// Searches for posts that match a search term.
 export const useSearchPosts = (searchTerm: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
@@ -78,6 +66,7 @@ export const useSearchPosts = (searchTerm: string) => {
   });
 };
 
+// Loads the most recent posts.
 export const useGetRecentPosts = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
@@ -85,6 +74,7 @@ export const useGetRecentPosts = () => {
   });
 };
 
+// Lets you create a new post using a mutation. Updates post lists after success.
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
   
@@ -98,6 +88,7 @@ export const useCreatePost = () => {
   });
 };
 
+// Loads a single post by its ID.
 export const useGetPostById = (postId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
@@ -106,6 +97,7 @@ export const useGetPostById = (postId?: string) => {
   });
 };
 
+// Loads all posts made by a specific user.
 export const useGetUserPosts = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
@@ -114,6 +106,7 @@ export const useGetUserPosts = (userId?: string) => {
   });
 };
 
+// Lets you update a post using a mutation. Updates the post after success.
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -126,6 +119,7 @@ export const useUpdatePost = () => {
   });
 };
 
+// Lets you delete a post using a mutation. Updates post lists after success.
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -139,6 +133,7 @@ export const useDeletePost = () => {
   });
 };
 
+// Lets you like or unlike a post using a mutation. Updates related data after success.
 export const useLikePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -166,6 +161,7 @@ export const useLikePost = () => {
   });
 };
 
+// Lets you save (bookmark) a post for a user using a mutation. Updates lists after success.
 export const useSavePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -185,6 +181,7 @@ export const useSavePost = () => {
   });
 };
 
+// Lets you remove a saved (bookmarked) post using a mutation. Updates lists after success.
 export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -207,6 +204,7 @@ export const useDeleteSavedPost = () => {
 // USER QUERIES
 // ============================================================
 
+// Loads the currently logged-in user's details.
 export const useGetCurrentUser = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
@@ -214,6 +212,7 @@ export const useGetCurrentUser = () => {
   });
 };
 
+// Loads a list of users, with an optional limit on how many to fetch.
 export const useGetUsers = (limit?: number) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
@@ -221,6 +220,7 @@ export const useGetUsers = (limit?: number) => {
   });
 };
 
+// Loads a user's details by their user ID.
 export const useGetUserById = (userId: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
@@ -229,6 +229,7 @@ export const useGetUserById = (userId: string) => {
   });
 };
 
+// Lets you update a user's profile using a mutation. Updates user data after success.
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
