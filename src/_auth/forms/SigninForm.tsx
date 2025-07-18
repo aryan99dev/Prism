@@ -9,7 +9,7 @@ import {SigninValidation} from "@/lib/validation";
 import Loader from "@/components/Shared/Loader.tsx";
 import {Link , useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast"
-import { useSignInAccount} from "@/lib/react-query/queriesAndMutation.tsx";
+import { useSignInAccount} from "@/lib/react-query/queriesAndMutation.ts";
 import {useUserContext} from "@/context/AuthContext.tsx";
 
 

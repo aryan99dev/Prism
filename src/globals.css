@@ -247,7 +247,7 @@
 
     /* Topbar */
     .topbar {
-        @apply sticky  top-0 z-50 md:hidden bg-dark-2/50 backdrop-blur w-full  ;
+        @apply sticky   border border-[0.5px] border-light-3/20 top-0 z-50 md:hidden bg-dark-2/50 backdrop-blur w-full  ;
     }
 
     /* User card */
@@ -260,7 +260,7 @@
     /* SHADCN COMPONENTS */
     /* Form */
     .shad-form_label {
-        @apply text-white !important;
+        @apply  text-white px-2 text-start justify-start font-thin !important;
     }
 
     .shad-form_message {
@@ -268,21 +268,27 @@
     }
 
     .shad-input {
-        @apply h-10 bg-dark-4/70 border-separate placeholder:text-light-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important;
+        @apply h-10 bg-dark-4/70 border border-[0.5px] border-light-3/20 placeholder:text-light-4 focus-visible:ring-[0.5px] focus-visible:ring-offset-1 ring-offset-light-3 !important;
     }
 
     .shad-textarea {
-        @apply h-36 bg-dark-3 rounded-xl border-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important;
+        @apply h-36 bg-dark-3/30 backdrop-blur-[5px]  rounded-xl border border-[0.5px]  border-light-3/20 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important;
     }
 
     /* Button */
     .shad-button_primary {
-        @apply bg-primary-500/50 hover:bg-primary-600 text-light-1 flex gap-2 hover:scale-[1.1]  rounded-xl backdrop:blur-[10px] text-[13px]
+        @apply h-10 border border-[0.5px] border-light-3/20 bg-primary-500/30 hover:bg-primary-600 text-light-1 flex gap-2 hover:scale-[1.1]  rounded-xl backdrop-blur-[5px] text-[13px]
         !important;
     }
 
     .shad-button_dark_4 {
-        @apply h-12 bg-dark-4 px-5 text-light-1 flex gap-2 !important;
+        @apply h-10  border border-[0.5px] border-light-3/20 bg-dark-4/50 px-5 text-light-1 flex gap-2  rounded-xl
+          hover:bg-rose-600 rounded-xl hover:scale-[1.1] backdrop-blur-[5px] text-[13px] !important;
+    }
+   
+    .shad-button_dark_5 {
+        @apply h-10  border border-[0.5px] border-light-3/20 bg-dark-4/50 px-5 text-light-1 flex gap-2  rounded-xl
+          hover:bg-primary-500 rounded-xl hover:translate-y-[-2px] backdrop-blur-[5px] text-[13px] !important;
     }
 
     .shad-button_ghost {

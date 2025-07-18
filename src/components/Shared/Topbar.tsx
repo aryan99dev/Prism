@@ -1,9 +1,10 @@
 import {Link, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
-import {useSignOutAccount} from "@/lib/react-query/queriesAndMutation.tsx";
+import {useSignOutAccount} from "@/lib/react-query/queriesAndMutation.ts";
 import {useEffect} from "react";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import TextPressure from "./TextPressure/TextPressure";
+import { Bolt } from "./Bolt";
 
 
 const Topbar = () => {
@@ -30,9 +31,9 @@ const Topbar = () => {
                         className=" transition-all duration-300 scale-[70%]  hover:scale-[90%]
                         hover:rotate-[360deg] ease-in-out "
                     />
-                    <div style={{ height: '80px'}}>
-                    <br/>
-                            <TextPressure
+                    <div style={{ height: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <br/>
+                        <TextPressure
                             text="Prism"
                             flex={true}
                             alpha={false}
@@ -42,8 +43,9 @@ const Topbar = () => {
                             strokeColor="#ff0000"
                             minFontSize={25}
                             className="flex justify-center text-center font-bold" 
-                            />
-                </div>
+                        />
+                       
+                    </div>
                 </Link>
                 <div className="flex gap-4 ">
 

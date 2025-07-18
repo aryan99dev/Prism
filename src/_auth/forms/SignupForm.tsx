@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button.tsx";
 import {useForm} from "react-hook-form";
 import { z } from "zod";
-import {SigninValidation, SignupValidation} from "@/lib/validation";
+import { SignupValidation} from "@/lib/validation";
 import Loader from "@/components/Shared/Loader.tsx";
 import {Link , useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast"
-import {useCreateUserAccount, useSignInAccount} from "@/lib/react-query/queriesAndMutation.tsx";
+import {useCreateUserAccount, useSignInAccount} from "@/lib/react-query/queriesAndMutation.ts";
 import {useUserContext} from "@/context/AuthContext.tsx";
 
 

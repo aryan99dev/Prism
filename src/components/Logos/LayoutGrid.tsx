@@ -2,6 +2,7 @@
 
 import { motion, useAnimation } from "motion/react";
 import type { Variants } from "motion/react";
+import { useBreakpoint } from "../../hooks/useBreakpoint";
 
 const boxVariants: Variants = {
   normal: (i: number) => ({
@@ -47,6 +48,23 @@ const LayoutGrid = ({
   ...props
 }: LayoutGridProps) => {
   const controls = useAnimation();
+  const breakpoint = useBreakpoint();
+
+  const handleAnimate = () => controls.start("animate");
+  const handleReset = () => controls.start("normal");
+
+  const eventProps =
+    breakpoint === "lg"
+      ? {
+          onMouseEnter: handleAnimate,
+          onMouseLeave: handleReset,
+        }
+      : {
+          onClick: () => {
+            handleAnimate();
+            setTimeout(handleReset, 300); // match animation duration
+          },
+        };
 
   return (
     <div
@@ -58,8 +76,7 @@ const LayoutGrid = ({
         alignItems: "center",
         justifyContent: "center",
       }}
-      onMouseEnter={() => controls.start("animate")}
-      onMouseLeave={() => controls.start("normal")}
+      {...eventProps}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

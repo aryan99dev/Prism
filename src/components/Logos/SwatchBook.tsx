@@ -2,6 +2,7 @@
 
 import type { Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
+import { useBreakpoint } from "../../hooks/useBreakpoint";
 
 interface SwatchBookProps extends React.SVGAttributes<SVGSVGElement> {
   width?: number;
@@ -67,6 +68,23 @@ const SwatchBook = ({
   ...props
 }: SwatchBookProps) => {
   const controls = useAnimation();
+  const breakpoint = useBreakpoint();
+
+  const handleAnimate = () => controls.start("animate");
+  const handleReset = () => controls.start("normal");
+
+  const eventProps =
+    breakpoint === "lg"
+      ? {
+          onMouseEnter: handleAnimate,
+          onMouseLeave: handleReset,
+        }
+      : {
+          onClick: () => {
+            handleAnimate();
+            setTimeout(handleReset, 300); // match animation duration
+          },
+        };
 
   return (
     <div
@@ -78,8 +96,7 @@ const SwatchBook = ({
         alignItems: "center",
         justifyContent: "center",
       }}
-      onMouseEnter={() => controls.start("animate")}
-      onMouseLeave={() => controls.start("normal")}
+      {...eventProps}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

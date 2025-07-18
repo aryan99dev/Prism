@@ -1,10 +1,10 @@
 "use client";
 
-import type { Transition, Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
+import type { Transition, Variants } from "motion/react";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
 
-interface ClapperboardProps extends React.SVGAttributes<SVGSVGElement> {
+interface BoltProps extends React.SVGAttributes<SVGSVGElement> {
   width?: number;
   height?: number;
   strokeWidth?: number;
@@ -12,39 +12,34 @@ interface ClapperboardProps extends React.SVGAttributes<SVGSVGElement> {
 }
 
 const transition: Transition = {
-  type: "spring",
-  stiffness: 400,
-  damping: 10,
-  mass: 0.8,
+  duration: 2,
+  ease: "linear",
+  repeat: 0,
 };
 
-const variants: Variants = {
-  normal: {
-    rotate: 0,
-    originX: 0,
-    originY: 1,
-    y: 0,
-  },
-  animate: {
-    rotate: [-45, 0],
-    y: [-2, 0],
-    transition,
-  },
+const spinVariants: Variants = {
+  normal: { rotate: 0 },
+  animate: { rotate: 360 },
 };
 
-const Clapperboard = ({
+const Bolt = ({
   width = 28,
   height = 28,
   strokeWidth = 2,
   stroke = "#ffffff",
   ...props
-}: ClapperboardProps) => {
+}: BoltProps) => {
   const controls = useAnimation();
   const breakpoint = useBreakpoint();
 
+  // Handlers
   const handleAnimate = () => controls.start("animate");
-  const handleReset = () => controls.start("normal");
+  const handleReset = () => {
+    controls.stop();
+    controls.start("normal");
+  };
 
+  // Event props
   const eventProps =
     breakpoint === "lg"
       ? {
@@ -54,7 +49,7 @@ const Clapperboard = ({
       : {
           onClick: () => {
             handleAnimate();
-            setTimeout(handleReset, 400); // match animation duration
+            setTimeout(handleReset, 2000); // match animation duration
           },
         };
 
@@ -82,15 +77,18 @@ const Clapperboard = ({
         strokeLinejoin="round"
         {...props}
       >
-        <motion.g variants={variants} animate={controls} initial="normal">
-          <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z" />
-          <path d="m6.2 5.3 3.1 3.9" />
-          <path d="m12.4 3.4 3.1 4" />
+        <motion.g
+          variants={spinVariants}
+          animate={controls}
+          initial="normal"
+          transition={transition}
+        >
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <circle cx="12" cy="12" r="4" />
         </motion.g>
-        <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
       </svg>
     </div>
   );
 };
 
-export { Clapperboard };
+export { Bolt };
