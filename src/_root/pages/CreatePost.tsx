@@ -29,7 +29,7 @@ const CreatePost = () => {
                     Create your Post
                  </ScrambledText>
           </div>
-          <PostForms />
+          <PostForms action="Create" />
         </div>
       </div>
     </div>

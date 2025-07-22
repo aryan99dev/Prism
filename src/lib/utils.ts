@@ -56,3 +56,10 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };
+
+export const convertImageUrl = (imageUrl: string | undefined): string => {
+  if (!imageUrl) return "";
+  
+  // Convert Appwrite preview URL to view URL
+  return imageUrl.replace("/preview", "/view").split("?")[0] + `?project=${import.meta.env.VITE_APPWRITE_PROJECT_ID}`;
+};

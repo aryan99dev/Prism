@@ -3,6 +3,7 @@ import {ID, Query} from 'appwrite';
 
 import {account, appwriteConfig, avatars, databases, storage} from "@/lib/appwrite/confit.ts";
 import type { INewUser, IUpdatePost, INewPost, IUpdateUser } from '@/types';
+import { Toast } from '@/components/ui/toast';
 
 
 

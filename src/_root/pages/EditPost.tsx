@@ -1,28 +1,22 @@
 import PostForms from "@/components/Forms/PostForms"
 import { Blend } from "@/components/Logos/Blend"
-import DotGrid from "@/components/Shared/Backgrounds/DotGrid/DotGrid"
+import DotBackground from "@/components/Shared/DotBackground"
+import Loader from "@/components/Shared/Loader"
 import ScrambledText from "@/components/Shared/TextAnimations/ScrambledText/ScrambledText"
+import { useGetPostById } from "@/lib/react-query/queriesAndMutation"
 import { useParams } from "react-router-dom"
 
 const EditPost = () => {
   const { id } = useParams();
+  const { data: post, isPending  } = useGetPostById(id || '');
 
+
+  if(isPending) return <Loader />
   return (
     <div className='relative flex flex-1 w-full h-screen'>
       {/* Background layer */}
       <div className='fixed inset-0 w-full h-full'>
-      <DotGrid
-        dotSize={2}
-        gap={13}
-        baseColor="#271e37"
-        activeColor="#5227FF"
-        proximity={50}
-        shockRadius={250}
-        shockStrength={20}
-        resistance={1000}
-        returnDuration={3}
-        
-      />
+        <DotBackground />
 
       </div>
 
@@ -43,7 +37,7 @@ const EditPost = () => {
                     Edit Post
                  </ScrambledText>
           </div>
-          <PostForms />
+          <PostForms action='Update' post={post} />
         </div>
       </div>
     </div>

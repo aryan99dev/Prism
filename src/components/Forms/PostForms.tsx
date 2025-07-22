@@ -12,16 +12,22 @@ import type { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
 import {  useToast } from "@/hooks/use-toast"
 import Loader from "../Shared/Loader"
-import { useCreatePost } from "@/lib/react-query/queriesAndMutation"
+import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutation"
 
 
 
 type PostFormProps = {
   post?: Models.Document;
+  action: 'Create' | 'Update'
 }
 
-const PostForms = ({ post }: PostFormProps) => {
+const PostForms = ({ post, action }: PostFormProps) => {
   const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
+  
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
+
+  
+
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -37,8 +43,25 @@ const PostForms = ({ post }: PostFormProps) => {
     },
   })
  
-  // 2. Define a submit handler.
+  // 2. Define a submit handler - for - create && update .
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+    if(post && action === 'Update') {
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post?.$id,
+        imageUrl: post?.imageUrl,
+      })
+
+      if(!updatedPost){
+        toast({ title: 'please try again' });;
+      }
+
+      return navigate(`/post/${post.$id}`)
+    }
+
+
+
 const newPost = await createPost({
   ...values,
   userId: user.id,
@@ -51,6 +74,7 @@ const newPost = await createPost({
     navigate("/");
   }
 
+console.log(post?.imageUrl)
 
   return (
     
@@ -80,11 +104,13 @@ const newPost = await createPost({
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="shad-form_label">Upload you Photo</FormLabel>
+              <FormLabel className="shad-form_label">
+                {action === 'Create' ? 'Upload your Photo' : 'Update your Photo'}
+              </FormLabel>
               <FormControl>
                 <FileUploader 
                 fieldChange={field.onChange}
-                mediaURL={post?.imageURL}
+                mediaURL={post?.imageUrl}
                 />
               </FormControl>
               <FormMessage className="shad-form_mess" />
@@ -131,19 +157,30 @@ const newPost = await createPost({
         />
         {/* Submit button */}
         <div className="flex justify-center gap-4 mt-4">
-          <Button type="button" className="shad-button_dark_4">Cancel</Button>
+          <Button 
+            type="button" 
+            className="shad-button_dark_4"
+            onClick={() => navigate("/")}
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
             className="shad-button_primary"
+            disabled={isLoadingCreate || isLoadingUpdate}
             >
-            {isLoadingCreate ? (
+            {isLoadingCreate || isLoadingUpdate ? (
               <div className="flex-center gap-2">
                 <Loader />
               </div>
-            ) : "Submit"
-            }
+            ) : (
+              `${action} Post`
+            )}
+            
             </Button>
         </div>
+            {/* Spacer for vertical gap */}
+            <div className="w-full h-[100px] lg:h-[100px] md:h-[500px] "></div>
       </form>
     </Form>
   
