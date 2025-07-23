@@ -4,6 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Bolt } from "./Bolt";
 import { useUserContext } from "@/context/AuthContext";
 import PostStats from "./PostStats";
+import { convertImageUrl } from "@/lib/utils";
 
 type PostCardProps = {
     post: Models.Document
@@ -24,7 +25,7 @@ if(!post.creator) return;
                     to={`${post.creator.$id}`}
                 >
                     <img 
-                        src={post?.creator?.imageUrl?.trim() ? post.creator.imageUrl : "/Icons/User.svg"}
+                        src={post?.creator?.imageUrl?.trim() ? convertImageUrl(post.creator.imageUrl) : "/Icons/User.svg"}
                         alt="creator profile picture"
                         onError={(e) => { e.currentTarget.src = "/Icons/User.svg"; }}
                         className="rounded-full w-12 lg:h-12"
@@ -72,7 +73,7 @@ if(!post.creator) return;
             <img 
             src={
               post.imageUrl
-                ? post.imageUrl.replace("/preview", "/view").split("?")[0] + `?project=${import.meta.env.VITE_APPWRITE_PROJECT_ID}`
+                ? convertImageUrl(post.imageUrl)
                 : "/Icons/loader.svg"
             }
             onError={e => { e.currentTarget.src = "/Icons/loader.svg"; }}

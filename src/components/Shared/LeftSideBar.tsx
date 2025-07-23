@@ -7,6 +7,7 @@ import { sidebarLinks } from "@/constants";
 import type { INavLink } from "@/types";
 import ClickSpark from "./Animations/ClickSpark/ClickSpark";
 import { useSignOutAccount } from "@/lib/react-query/queriesAndMutation";
+import { convertImageUrl } from "@/lib/utils";
 
 
 const LeftSideBar = () => {
@@ -16,20 +17,18 @@ const LeftSideBar = () => {
     const { mutate: SignOut,
          isSuccess } = useSignOutAccount();
         const navigate = useNavigate();
-    
+
         useEffect(() => {
             if(isSuccess){
                 navigate(0);
             }
         }, [isSuccess]);
-    
+
         const { user } = useUserContext();
 
         const containerRef = useRef(null);
 
-        
-    // Add debug logging
-    console.log("User object:", user);
+
 
     if (!user) {
         return <div className="leftsidebar">Loading...</div>;
@@ -72,11 +71,11 @@ const LeftSideBar = () => {
              className="flex gap-3 items-center"
              >
              <img 
-                src={user?.imageUrl || "/Icons/User.svg"}
+                src={user?.imageUrl ? convertImageUrl(user.imageUrl) : "/Icons/User.svg"}
                 alt="profile"
                 className="w-14 h-14 border-2  border-white rounded-full hover:opacity-90 
                 hover:scale-[105%] transition-all duration-300 ease-in-out"
-             /> 
+             />
              <div className="flex flex-col">
                 <p className="body-bold text-white">
                     {user.name}
@@ -88,7 +87,7 @@ const LeftSideBar = () => {
              </Link>
 
              {/* pages links */}
-             
+
              <ul className="flex flex-col gap-6">
                 {sidebarLinks.map((link: INavLink) => {
                     const isActive = pathname === link.route

@@ -10,7 +10,10 @@ type PostStatsProps = {
 }
 const liked = "/Icons/liked.svg"
 const PostStats = ({ post ,userId }: PostStatsProps) => {
-    const likesList = post.likes.map((user: Models.Document) => user.$id)
+    // Ensure post.likes exists and is an array before mapping
+    const likesList = post && post.likes && Array.isArray(post.likes) 
+        ? post.likes.map((user: Models.Document) => user?.$id).filter(Boolean)
+        : [];
 
     const [likes, setLikes] = useState(likesList);
     const [isSaved, setIsSaved] = useState(false);
@@ -22,14 +25,22 @@ const PostStats = ({ post ,userId }: PostStatsProps) => {
 
     const { data: currentUser } = useGetCurrentUser();
 
-    const savedPostRecord = currentUser?.save.find((record: Models.Document) => record.post.$id === post.$id)
+    const savedPostRecord = post && post.$id && currentUser?.save 
+        ? currentUser.save.find((record: Models.Document) => record.post && record.post.$id === post.$id)
+        : undefined
 
     useEffect(()=> {
         setIsSaved(!!savedPostRecord);
     }, [currentUser]);
 
+
+
     const handleLikedPost = (e: React.MouseEvent) => {
-        e.stopPropagation
+        e.stopPropagation();
+
+        // Check if post exists and has an $id
+        if (!post || !post.$id) return;
+
         let newLikes = [...likes];
 
         const hasLiked = newLikes.includes(userId);
@@ -45,8 +56,10 @@ const PostStats = ({ post ,userId }: PostStatsProps) => {
     }
 
     const handleSavedPost = (e: React.MouseEvent) => {
-        e.stopPropagation
+        e.stopPropagation();
 
+        // Check if post exists and has an $id
+        if (!post || !post.$id) return;
 
         if(savedPostRecord) {
             setIsSaved(false);
@@ -58,7 +71,7 @@ const PostStats = ({ post ,userId }: PostStatsProps) => {
 
     }
 
-    
+
   return (
     <div 
     className="flex justify-between items-center z-20"

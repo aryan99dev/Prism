@@ -8,7 +8,7 @@ import {
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
 import {  createUserAccount,  SignInAccount,  SignOutAccount,  getCurrentUser,  getUsers,  createPost,  getPostById,  updatePost,
           getUserPosts,  deletePost,  likePost,  getUserById,  updateUser,  getRecentPosts,  getInfinitePosts,  searchPosts,  
-          savePost,  deleteSavedPost, } from "@/lib/appwrite/api.ts";
+          savePost,  deleteSavedPost, followUser, unfollowUser } from "@/lib/appwrite/api.ts";
 import type { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 
 // ============================================================
@@ -241,6 +241,30 @@ export const useUpdateUser = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
       });
+    },
+  });
+};
+
+export const useFollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }) =>
+      followUser(currentUserId, targetUserId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_USER_BY_ID] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_CURRENT_USER] });
+    },
+  });
+};
+
+export const useUnfollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }) =>
+      unfollowUser(currentUserId, targetUserId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_USER_BY_ID] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_CURRENT_USER] });
     },
   });
 };

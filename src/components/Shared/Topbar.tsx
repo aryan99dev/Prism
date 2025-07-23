@@ -5,6 +5,7 @@ import {useEffect} from "react";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import TextPressure from "./TextPressure/TextPressure";
 import { Bolt } from "./Bolt";
+import { convertImageUrl } from "@/lib/utils";
 
 
 const Topbar = () => {
@@ -44,7 +45,7 @@ const Topbar = () => {
                             minFontSize={25}
                             className="flex justify-center text-center font-bold" 
                         />
-                       
+
                     </div>
                 </Link>
                 <div className="flex gap-4 ">
@@ -56,7 +57,7 @@ const Topbar = () => {
                           className="flex-center gap-3 "
                     >
                     <img
-                    src={user.imageUrl || "/Icons/User.svg" }
+                    src={user.imageUrl ? convertImageUrl(user.imageUrl) : "/Icons/User.svg" }
                     alt="profile"
                     className="w-8 h-8 border-2 border-white rounded-full hover:opacity-90"
                     />

@@ -1,9 +1,29 @@
-import React from 'react'
+import GridPostList from "@/components/Shared/GridPostList";
+import { useGetCurrentUser, useGetUserById } from "@/lib/react-query/queriesAndMutation";
+import { Loader } from "lucide-react";
+import { useParams } from "react-router-dom";
 
-const LikedPost = () => {
+const LikedPosts = () => {
+  const { id } = useParams();
+  const { data: currentUser } = useGetCurrentUser();
+  const { data: profileUser, isLoading } = useGetUserById(id || "");
+
+  if (isLoading || !profileUser)
+    return (
+      <div className="flex-center w-full h-full">
+        <Loader />
+      </div>
+    );
+
   return (
-    <div>LikedPost</div>
-  )
-}
+    <>
+      {(!profileUser.liked || profileUser.liked.length === 0) && (
+        <p className="text-light-4">No liked posts</p>
+      )}
 
-export default LikedPost
+      <GridPostList posts={profileUser.liked || []} showStats={false} />
+    </>
+  );
+};
+
+export default LikedPosts;

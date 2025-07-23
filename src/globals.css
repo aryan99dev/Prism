@@ -123,7 +123,7 @@
 
     /* Explore */
     .explore-container {
-        @apply flex flex-col flex-1 items-center overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
+        @apply flex flex-col flex-1 items-center overflow-hidden py-10 px-5 md:p-14 custom-scrollbar;
     }
 
     .explore-inner_container {
@@ -183,7 +183,7 @@
 
     /* Saved */
     .saved-container {
-        @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
+        @apply flex flex-col flex-1 items-center gap-10 overflow-y-auto overflow-x-hidden py-10 px-5 md:p-14 custom-scrollbar;
     }
 
 /* Bottom bar */
@@ -211,15 +211,15 @@
 
     /* Grid Post List */
     .grid-container {
-        @apply w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 lg:ms-[-50%] lg:gap-x-[72%] gap-y-[1em] lg:gap-y-[3em] max-w-5xl;
+        @apply w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 lg:ms-[-100%] lg:gap-x-[72%] gap-y-[1em] lg:gap-y-[3em] max-w-5xl;
     }
 
     .grid-post_link {
-        @apply flex rounded-[24px] border border-dark-4 overflow-hidden cursor-pointer w-full h-full ;
+        @apply flex rounded-[24px]  border border-dark-4 overflow-hidden cursor-pointer w-full h-full ;
     }
 
     .grid-post_user {
-        @apply absolute bottom-[0%]   p-5 flex-center w-full bg-gradient-to-t from-dark-3 to-transparent rounded-b-[24px] gap-2;
+        @apply absolute bottom-[0%]  p-5 flex-center w-full bg-gradient-to-t from-dark-3 to-transparent rounded-b-[24px] gap-1;
     }
 
 /* Left sidebar */
@@ -312,4 +312,29 @@
 .line-l-r {
     @apply relative inline-block text-black after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px]
     after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full
+}
+
+.violet-tint {
+  position: relative;
+  overflow: hidden;
+}
+.violet-tint img {
+  filter: grayscale(1);
+  transition: filter 0.5s, transform 0.5s;
+}
+.violet-tint::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(102, 66, 185, 0.3); /* Tailwind's violet-500 with 30% opacity */
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 1;
+}
+.violet-tint:hover img {
+  filter: none;
+  transform: scale(1.10);
+}
+.violet-tint:hover::before {
+  opacity: 0;
 }

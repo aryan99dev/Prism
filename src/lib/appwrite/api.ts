@@ -547,3 +547,33 @@ export async function createPost(post: INewPost) {
       throw error;
     }
   }
+
+export async function followUser(currentUserId: string, targetUserId: string) {
+  const currentUser = await databases.getDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, currentUserId);
+  const targetUser = await databases.getDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, targetUserId);
+
+  const updatedFollowing = Array.from(new Set([...(currentUser.following || []), targetUserId]));
+  const updatedFollowers = Array.from(new Set([...(targetUser.followers || []), currentUserId]));
+
+  await databases.updateDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, currentUserId, {
+    following: updatedFollowing,
+  });
+  await databases.updateDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, targetUserId, {
+    followers: updatedFollowers,
+  });
+}
+
+export async function unfollowUser(currentUserId: string, targetUserId: string) {
+  const currentUser = await databases.getDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, currentUserId);
+  const targetUser = await databases.getDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, targetUserId);
+
+  const updatedFollowing = (currentUser.following || []).filter((id: string) => id !== targetUserId);
+  const updatedFollowers = (targetUser.followers || []).filter((id: string) => id !== currentUserId);
+
+  await databases.updateDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, currentUserId, {
+    following: updatedFollowing,
+  });
+  await databases.updateDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, targetUserId, {
+    followers: updatedFollowers,
+  });
+}

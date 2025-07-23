@@ -4,9 +4,11 @@ import Loader from "@/components/Shared/Loader";
 import PostStats from "@/components/Shared/PostStats";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetPostById } from "@/lib/react-query/queriesAndMutation"
+import { useDeletePost, useGetPostById, useDeleteSavedPost, useGetCurrentUser } from "@/lib/react-query/queriesAndMutation"
 import { formatDistanceToNow } from "date-fns";
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import type { Models } from "appwrite";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Helper to transform Appwrite preview URL to view URL
 const getDisplayImageUrl = (url: string | undefined) => {
@@ -18,13 +20,56 @@ const PostDetails = () => {
   const { id }= useParams();
   const { data: post, isPending } = useGetPostById( id || '' );
   const { user } = useUserContext();
+  const navigate = useNavigate();
+  const { mutate: deletePost, isPending: isDeleting } = useDeletePost();
+  const { mutate: deleteSavePost } = useDeleteSavedPost();
+  const { data: currentUser } = useGetCurrentUser();
+  const queryClient = useQueryClient();
 
   const handleDeletePost = () => {
+    if (!post) return;
 
+    // Only allow the creator to delete the post
+    if (user.id !== post.creator.$id) {
+      console.log("Only the creator can delete this post");
+      return;
+    }
+
+    deletePost({ 
+      postId: post.$id, 
+      imageId: post.imageid
+    }, {
+      onSuccess: () => {
+        // Remove from saved posts if it exists
+        if (currentUser?.save) {
+          const savedRecord = currentUser.save.find((record: Models.Document) => record.post && record.post.$id === post.$id);
+          if (savedRecord) {
+            deleteSavePost(savedRecord.$id, {
+              onSuccess: () => {
+                // Force refetch of current user after saved post is deleted
+                queryClient.invalidateQueries(["getCurrentUser"]);
+              }
+            });
+          } else {
+            // If not saved, still force refetch after post deletion
+            queryClient.invalidateQueries(["getCurrentUser"]);
+          }
+        } else {
+          // If no save array, still force refetch after post deletion
+          queryClient.invalidateQueries(["getCurrentUser"]);
+        }
+        // Navigate after successful deletion
+        navigate('/');
+      },
+      onError: (error) => {
+        console.error("Failed to delete post:", error);
+        alert("Failed to delete post. Please try again.");
+      }
+    });
   }
 
-  // Guard clause: show loader if loading, or if post/creator is missing
-  if (isPending || !post || !post.creator) {
+  // Guard clause: show loader if loading, deleting, or if post/creator is missing
+  if (isPending || isDeleting || !post || !post.creator) {
     return <Loader />;
   }
 
@@ -43,12 +88,12 @@ const PostDetails = () => {
         />
         <div className="post_details-info">
           <div className="flex-between w-full mt-3">
-            
+
           <Link to={`/profile/${post?.creator.$id}`}
-          className="flex gap-4  items-center gap-3"
+          className="flex gap-4  items-center "
           >
             <img 
-              src={post.creator?.imageUrl?.trim() ? post?.creator.imageUrl : "/Icons/User.svg"}
+              src={getDisplayImageUrl(post.creator?.imageUrl) || "/Icons/User.svg"}
               alt="creator profile picture"
               onError={(e) => { e.currentTarget.src = "/Icons/User.svg"; }}
               className="rounded-full w-8 h-8 lg:w-12 lg:h-12"
@@ -59,7 +104,7 @@ const PostDetails = () => {
               <p className="subtle-semibold  lg:small-regular ">
                 Posted on - {formatDistanceToNow(new Date(post?.$createdAt), { addSuffix: true })}
               </p>
-              <p className="subtle-semibold lg:smallregular">
+              <p className="subtle-semibold lg:small-regular">
                 {post?.location}
               </p>
             </div>
@@ -68,25 +113,30 @@ const PostDetails = () => {
 
 
           <div className="flex-center ">
-          <Link to={`/update-post/${post?.$id}`} 
-          className={`${user.id !== post?.creator.$id && 'hidden '} flex-center gap-4  mb-6 `}
-          >
-            <img
-              src="/public/Icons/edit-05.svg"
-              alt="edit"
-              width={24}
-              height={24}
-            />
-          </Link>
-          <Button
-          onClick={handleDeletePost}
-          variant="ghost"
-          className={`ghost_details-delete_btn ${user.id !== post?.creator.$id && 'hidden'} mb-6`}
-          >
-            <Delete 
-            className="size-6"
-            />
-          </Button>
+          {user.id === post?.creator.$id && (
+            <Link to={`/update-post/${post?.$id}`} 
+              className="flex-center gap-4 mb-6"
+            >
+              <img
+                src="/Icons/edit-05.svg"
+                alt="edit"
+                width={24}
+                height={24}
+              />
+            </Link>
+          )}
+          {user.id === post?.creator.$id && (
+            <Button
+              onClick={handleDeletePost}
+              variant="ghost"
+              className="ghost_details-delete_btn mb-6"
+              aria-label="Delete post"
+            >
+              <Delete 
+                className="size-6"
+              />
+            </Button>
+          )}
           </div>
           </div >
           <hr className=" border w-full border-dark-4 mt-2" />
