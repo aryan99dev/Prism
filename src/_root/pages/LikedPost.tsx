@@ -1,11 +1,11 @@
 import GridPostList from "@/components/Shared/GridPostList";
-import { useGetCurrentUser, useGetUserById } from "@/lib/react-query/queriesAndMutation";
+import { useGetUserById } from "@/lib/react-query/queriesAndMutation";
 import { Loader } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const LikedPosts = () => {
   const { id } = useParams();
-  const { data: currentUser } = useGetCurrentUser();
+  // const { data: currentUser } = useGetCurrentUser();
   const { data: profileUser, isLoading } = useGetUserById(id || "");
 
   if (isLoading || !profileUser)

@@ -32,18 +32,8 @@ const Profile = () => {
   // Fetch current user data by ID
   const { data: currentUser } = useGetUserById(id || "");
   // Mutation hooks for follow/unfollow
-  const { mutate: follow } = useFollowUser({
-    onError: (error) => {
-      console.error("Follow error:", error);
-      alert("Failed to follow user. Check permissions and try again.");
-    }
-  });
-  const { mutate: unfollow } = useUnfollowUser({
-    onError: (error) => {
-      console.error("Unfollow error:", error);
-      alert("Failed to unfollow user. Check permissions and try again.");
-    }
-  });
+  const { mutate: follow } = useFollowUser();
+  const { mutate: unfollow } = useUnfollowUser();
 
   // Show loader if user data is not loaded
   if (!currentUser)

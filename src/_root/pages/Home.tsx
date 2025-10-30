@@ -2,17 +2,20 @@ import DotBackground from "@/components/Shared/DotBackground";
 import Loader from "@/components/Shared/Loader";
 import PostCard from "@/components/Shared/PostCard";
 import ScrambledText from "@/components/Shared/TextAnimations/ScrambledText/ScrambledText"
+import StoriesContainer from "@/components/Shared/Stories/StoriesContainer";
 import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutation";
 import type { Models } from "appwrite";
 
 const Home = () => {
-    const { data: posts, isPending: isPostLoading, isError: isErrorPosts } = useGetRecentPosts();
+    const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
 
 
     return (
         <div className="flex flex-1" style={{ position: "relative" }}>
             <DotBackground />
             <div className="home-container" style={{ position: "relative", zIndex: 1 }}>
+                {/* Stories Section */}
+                <StoriesContainer />
                 
                 <div className="home-posts">
                  <ScrambledText

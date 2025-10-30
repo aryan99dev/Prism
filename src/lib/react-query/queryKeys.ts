@@ -17,4 +17,8 @@ export const QUERY_KEYS = {
 
   //  SEARCH KEYS
   SEARCH_POSTS: "getSearchPosts",
+
+  // STORY KEYS
+  GET_ACTIVE_STORIES: "getActiveStories",
+  GET_USER_STORIES: "getUserStories",
 } as const;

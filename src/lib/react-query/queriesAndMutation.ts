@@ -8,8 +8,8 @@ import {
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
 import {  createUserAccount,  SignInAccount,  SignOutAccount,  getCurrentUser,  getUsers,  createPost,  getPostById,  updatePost,
           getUserPosts,  deletePost,  likePost,  getUserById,  updateUser,  getRecentPosts,  getInfinitePosts,  searchPosts,  
-          savePost,  deleteSavedPost, followUser, unfollowUser } from "@/lib/appwrite/api.ts";
-import type { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+          savePost,  deleteSavedPost, followUser, unfollowUser, createStory, getActiveStories, getUserStories, viewStory, deleteStory } from "@/lib/appwrite/api.ts";
+import type { INewPost, INewUser, IUpdatePost, IUpdateUser, INewStory } from "@/types";
 
 // ============================================================
 // AUTH QUERIES
@@ -265,6 +265,70 @@ export const useUnfollowUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_USER_BY_ID] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_CURRENT_USER] });
+    },
+  });
+};// 
+// STORY QUERIES
+// ============================================================
+
+// Creates a new story using a mutation
+export const useCreateStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (story: INewStory) => createStory(story),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ACTIVE_STORIES],
+      });
+    },
+  });
+};
+
+// Gets all active stories
+export const useGetActiveStories = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ACTIVE_STORIES],
+    queryFn: getActiveStories,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+// Gets stories by a specific user
+export const useGetUserStories = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_STORIES, userId],
+    queryFn: () => getUserStories(userId),
+    enabled: !!userId,
+  });
+};
+
+// Marks a story as viewed
+export const useViewStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ storyId, userId }: { storyId: string; userId: string }) =>
+      viewStory(storyId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ACTIVE_STORIES],
+      });
+    },
+  });
+};
+
+// Deletes a story
+export const useDeleteStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ storyId, imageId }: { storyId: string; imageId: string }) =>
+      deleteStory(storyId, imageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ACTIVE_STORIES],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_STORIES],
+      });
     },
   });
 };

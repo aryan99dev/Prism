@@ -3,6 +3,7 @@ import { Earth } from "@/components/Logos/Earth";
 import { LayoutGrid } from "@/components/Logos/LayoutGrid";
 import { UserLG } from "@/components/Logos/User";
 import { Blend } from "@/components/Logos/Blend";
+import { Stories } from "@/components/Logos/Stories";
 
 export const sidebarLinks = [
   {
@@ -16,6 +17,12 @@ export const sidebarLinks = [
     imgURL: "/assets/icons/wallpaper.svg",
     route: "/explore",
     label: "Explore",
+  },
+  {
+    icon: Stories,
+    imgURL: "/assets/icons/stories.svg",
+    route: "/stories",
+    label: "Stories",
   },
   {
     icon: UserLG,

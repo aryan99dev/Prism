@@ -4,26 +4,17 @@ import type { Variants } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
 
-interface SwatchBookProps extends React.SVGAttributes<SVGSVGElement> {
+interface StoriesProps extends React.SVGAttributes<SVGSVGElement> {
   width?: number;
   height?: number;
   strokeWidth?: number;
   stroke?: string;
 }
 
-// const staticVariants: Variants = {
-//   normal: {
-//     opacity: 1,
-//   },
-//   animate: {
-//     opacity: 1,
-//   },
-// };
-
-const mergingVariants: Variants = {
+const ringVariants: Variants = {
   normal: {
-    x: 0,
-    opacity: 1,
+    scale: 1,
+    rotate: 0,
     transition: {
       type: "spring",
       stiffness: 300,
@@ -31,8 +22,8 @@ const mergingVariants: Variants = {
     },
   },
   animate: {
-    x: -8,
-    opacity: 0,
+    scale: 1.1,
+    rotate: 360,
     transition: {
       type: "spring",
       stiffness: 300,
@@ -41,32 +32,13 @@ const mergingVariants: Variants = {
   },
 };
 
-const mainSwatchVariants: Variants = {
-  normal: {
-    x: 0,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 25,
-    },
-  },
-  animate: {
-    x: 4,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 25,
-    },
-  },
-};
-
-const SwatchBook = ({
+const Stories = ({
   width = 28,
   height = 28,
   strokeWidth = 2,
   stroke = "#ffffff",
   ...props
-}: SwatchBookProps) => {
+}: StoriesProps) => {
   const controls = useAnimation();
   const breakpoint = useBreakpoint();
 
@@ -82,7 +54,7 @@ const SwatchBook = ({
       : {
           onClick: () => {
             handleAnimate();
-            setTimeout(handleReset, 300); // match animation duration
+            setTimeout(handleReset, 300);
           },
         };
 
@@ -110,32 +82,37 @@ const SwatchBook = ({
         strokeLinejoin="round"
         {...props}
       >
-        {/* Main vertical swatch that stays */}
-        <motion.path
-          d="M11 17a4 4 0 0 1-8 0V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2Z"
-          variants={mainSwatchVariants}
+        {/* Outer ring */}
+        <motion.circle
+          cx="12"
+          cy="12"
+          r="10"
+          variants={ringVariants}
           animate={controls}
+          initial="normal"
         />
-        <motion.path
-          d="M 7 17h.01"
-          variants={mainSwatchVariants}
+        {/* Inner circle */}
+        <motion.circle
+          cx="12"
+          cy="12"
+          r="6"
+          variants={ringVariants}
           animate={controls}
+          initial="normal"
         />
-
-        {/* Parts that merge into the main swatch */}
-        <motion.path
-          d="M16.7 13H19a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H7"
-          variants={mergingVariants}
+        {/* Center dot */}
+        <motion.circle
+          cx="12"
+          cy="12"
+          r="2"
+          fill={stroke}
+          variants={ringVariants}
           animate={controls}
-        />
-        <motion.path
-          d="m11 8 2.3-2.3a2.4 2.4 0 0 1 3.404.004L18.6 7.6a2.4 2.4 0 0 1 .026 3.434L9.9 19.8"
-          variants={mergingVariants}
-          animate={controls}
+          initial="normal"
         />
       </svg>
     </div>
   );
 };
 
-export { SwatchBook };
+export { Stories };

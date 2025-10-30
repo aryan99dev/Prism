@@ -21,9 +21,9 @@ const AuthLayout = () => {
                  enableMouseInteraction={true}
                  mouseRadius={0.3}
                  colorNum={8}
-                  waveAmplitude={0.3}
+                  waveAmplitude={0.15}
                   waveFrequency={2.5}
-                  waveSpeed={0.05}
+                  waveSpeed={0.03}
                 />
             </div>
             

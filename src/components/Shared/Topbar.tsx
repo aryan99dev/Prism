@@ -4,7 +4,7 @@ import {useSignOutAccount} from "@/lib/react-query/queriesAndMutation.ts";
 import {useEffect} from "react";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import TextPressure from "./TextPressure/TextPressure";
-import { Bolt } from "./Bolt";
+// import { Bolt } from "./Bolt";
 import { convertImageUrl } from "@/lib/utils";
 
 

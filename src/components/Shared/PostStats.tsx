@@ -8,7 +8,7 @@ type PostStatsProps = {
     post: Models.Document;
     userId: string;
 }
-const liked = "/Icons/liked.svg"
+// const liked = "/Icons/liked.svg"
 const PostStats = ({ post ,userId }: PostStatsProps) => {
     // Ensure post.likes exists and is an array before mapping
     const likesList = post && post.likes && Array.isArray(post.likes) 

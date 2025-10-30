@@ -129,7 +129,8 @@ ring-[0.5px] ring-violet-300/50 fade-in-shadow backdrop-blur-[5px]
                                             <FormMessage className="text-center" />
                                         </FormItem>
                                     )}
-                                />
+            
+            />
                                 {/*Description*/}
                                 <FormDescription className="text-center mt-1 text-white/30 " >
                                     Please fill in all the fields to create an account.

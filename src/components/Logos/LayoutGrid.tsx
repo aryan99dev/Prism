@@ -5,7 +5,7 @@ import type { Variants } from "framer-motion";
 import { useBreakpoint } from "../../hooks/useBreakpoint";
 
 const boxVariants: Variants = {
-  normal: (i: number) => ({
+  normal: () => ({
     x: 0,
     y: 0,
     transition: {

@@ -17,7 +17,7 @@ import {useUserContext} from "@/context/AuthContext.tsx";
 const SignupForm = () => {
     const { toast } = useToast();
     const navigate = useNavigate();
-    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+    const { checkAuthUser } = useUserContext();
 
 //
         const form = useForm<z.infer<typeof SignupValidation>>({
@@ -31,7 +31,7 @@ const SignupForm = () => {
     })
 //Queries
     const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
-    const { mutateAsync: signInAccount, isPending: isSigningIn }  = useSignInAccount();
+    const { mutateAsync: signInAccount }  = useSignInAccount();
 //
 
 

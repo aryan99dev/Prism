@@ -47,16 +47,16 @@ const PostDetails = () => {
             deleteSavePost(savedRecord.$id, {
               onSuccess: () => {
                 // Force refetch of current user after saved post is deleted
-                queryClient.invalidateQueries(["getCurrentUser"]);
+                queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
               }
             });
           } else {
             // If not saved, still force refetch after post deletion
-            queryClient.invalidateQueries(["getCurrentUser"]);
+            queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
           }
         } else {
           // If no save array, still force refetch after post deletion
-          queryClient.invalidateQueries(["getCurrentUser"]);
+          queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
         }
         // Navigate after successful deletion
         navigate('/');

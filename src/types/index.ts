@@ -48,3 +48,21 @@ export type INewUser = {
     username: string;
     password: string;
 };
+
+export type INewStory = {
+    userId: string;
+    file: File[];
+    caption?: string;
+    duration?: number; // in seconds, default 24 hours
+};
+
+export type IStory = {
+    $id: string;
+    creator: IUser;
+    imageUrl: string;
+    imageId: string;
+    caption?: string;
+    $createdAt: string;
+    expiresAt: string;
+    viewers: string[]; // array of user IDs who viewed the story
+};

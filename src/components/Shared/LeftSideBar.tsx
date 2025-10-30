@@ -1,7 +1,7 @@
 import {Link, NavLink, useNavigate, useLocation} from "react-router-dom";
 import TextPressure from "./TextPressure/TextPressure";
 import { useUserContext } from "@/context/AuthContext";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Button } from "../ui/button";
 import { sidebarLinks } from "@/constants";
 import type { INavLink } from "@/types";
@@ -26,7 +26,7 @@ const LeftSideBar = () => {
 
         const { user } = useUserContext();
 
-        const containerRef = useRef(null);
+        // const containerRef = useRef(null);
 
 
 
@@ -104,10 +104,7 @@ const LeftSideBar = () => {
                         className="flex gap-4 items-center p-2 "
                         >
                             <div className="flex scale-75">
-                         {IconComponent && <IconComponent 
-                            className={`group-hover:invert-violet
-                                ${isActive && 'invert-white'}`} 
-                         />}
+                         {IconComponent && <IconComponent />}
                             </div>
                          {link.label}
                         </NavLink>
@@ -116,7 +113,7 @@ const LeftSideBar = () => {
                 })}
              </ul>
              {/* LogOut */}
-             <div className="flex flex-col gap-4 items-center justify-center m-auto py-60">
+             <div className="flex flex-col gap-2 items-center justify-center m-auto py-60">
                  <Button variant="ghost" className="shad-button_ghost w-full " onClick={() => SignOut()}>
                     <img src="/Icons/logout.svg" 
                     />

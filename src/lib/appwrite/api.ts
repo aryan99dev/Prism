@@ -2,8 +2,8 @@ import {ID, Query} from 'appwrite';
 
 
 import {account, appwriteConfig, avatars, databases, storage} from "@/lib/appwrite/confit.ts";
-import type { INewUser, IUpdatePost, INewPost, IUpdateUser } from '@/types';
-import { Toast } from '@/components/ui/toast';
+import type { INewUser, IUpdatePost, INewPost, IUpdateUser, INewStory } from '@/types';
+// import { Toast } from '@/components/ui/toast';
 
 
 
@@ -576,4 +576,182 @@ export async function unfollowUser(currentUserId: string, targetUserId: string) 
   await databases.updateDocument(appwriteConfig.databaseID, appwriteConfig.userCollectionID, targetUserId, {
     followers: updatedFollowers,
   });
+}
+
+// ============================================================
+// STORIES
+// ============================================================
+
+// Creates a new story with an image
+export async function createStory(story: INewStory) {
+  try {
+    // Upload file to appwrite storage
+    const uploadedFile = await uploadFile(story.file[0]);
+    
+    if (!uploadedFile) throw Error;
+    
+    // Get file url
+    const fileUrl = getFilePreview(uploadedFile.$id);
+    if (!fileUrl) {
+      await deleteFile(uploadedFile.$id);
+      throw Error;
+    }
+
+    // Calculate expiration time (24 hours from now)
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + (story.duration || 24));
+
+    // Create story
+    const newStory = await databases.createDocument(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      ID.unique(),
+      {
+        users: story.userId,
+        imageUrl: fileUrl,
+        imageId: uploadedFile.$id,
+        caption: story.caption || "",
+        expiresAt: expiresAt.toISOString(),
+        viewers: [],
+      }
+    );
+
+    if (!newStory) {
+      await deleteFile(uploadedFile.$id);
+      throw Error;
+    }
+
+    return newStory;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Gets all active stories (not expired) grouped by user
+export async function getActiveStories() {
+  try {
+    const now = new Date().toISOString();
+    
+    const stories = await databases.listDocuments(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      [
+        Query.greaterThan("expiresAt", now),
+        Query.orderDesc("$createdAt"),
+        Query.limit(100)
+      ]
+    );
+
+    if (!stories) throw Error;
+
+    return stories;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Gets stories by a specific user
+export async function getUserStories(userId: string) {
+  try {
+    const now = new Date().toISOString();
+    
+    const stories = await databases.listDocuments(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      [
+        Query.equal("users", userId),
+        Query.greaterThan("expiresAt", now),
+        Query.orderDesc("$createdAt")
+      ]
+    );
+
+    if (!stories) throw Error;
+
+    return stories;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Marks a story as viewed by a user
+export async function viewStory(storyId: string, userId: string) {
+  try {
+    // Get current story
+    const story = await databases.getDocument(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      storyId
+    );
+
+    if (!story) throw Error;
+
+    // Add user to viewers if not already present
+    const viewers = story.viewers || [];
+    if (!viewers.includes(userId)) {
+      viewers.push(userId);
+      
+      const updatedStory = await databases.updateDocument(
+        appwriteConfig.databaseID,
+        appwriteConfig.storiesCollectionID,
+        storyId,
+        {
+          viewers: viewers,
+        }
+      );
+
+      return updatedStory;
+    }
+
+    return story;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Deletes a story
+export async function deleteStory(storyId: string, imageId: string) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      storyId
+    );
+
+    if (!statusCode) throw Error;
+
+    await deleteFile(imageId);
+
+    return { status: "Ok" };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Clean up expired stories (you might want to run this periodically)
+export async function cleanupExpiredStories() {
+  try {
+    const now = new Date().toISOString();
+    
+    const expiredStories = await databases.listDocuments(
+      appwriteConfig.databaseID,
+      appwriteConfig.storiesCollectionID,
+      [Query.lessThan("expiresAt", now)]
+    );
+
+    if (expiredStories.documents.length > 0) {
+      for (const story of expiredStories.documents) {
+        await deleteStory(story.$id, story.imageId);
+      }
+    }
+
+    return { deleted: expiredStories.documents.length };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
